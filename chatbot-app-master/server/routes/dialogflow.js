@@ -27,12 +27,12 @@ router.post('/textQuery', async (req, res) => {
                 // dialogflow agent 보내줄 텍스트, bodyParser가 있기때문에 req.body.text로 사용가능
                 text: req.body.text, 
                 // 언어타입
-                languageCode: languageCode,
+                languageCode: languageCode
             },
         },
     };
 
-    // Send request and log result
+     //리퀘스트 전송 및 리절트 로그
     const responses = await sessionClient.detectIntent(request);
     console.log('Detected intent');
     const result = responses[0].queryResult;
@@ -46,7 +46,32 @@ router.post('/textQuery', async (req, res) => {
 
 
 //Event Query Route
+router.post('/eventQuery', async (req, res) => {
+    // 클라이언트 에서 받은 정보를 dialogflow에 보내 주기
 
+    //채팅 보내기 요청
+    const request = {
+        session: sessionPath,
+        queryInput: {
+            event: {
+                // dialogflow agent 보내줄 텍스트, bodyParser가 있기때문에 req.body.text로 사용가능
+                name: req.body.event, 
+                // 언어타입
+                languageCode: languageCodes
+            },
+        },
+    };
+
+    //리퀘스트 전송 및 리절트 로그
+    const responses = await sessionClient.detectIntent(request);
+    console.log('Detected intent');
+    const result = responses[0].queryResult;
+    console.log(`  Query: ${result.queryText}`);
+    console.log(`  Response: ${result.fulfillmentText}`);
+
+    //프론트에 보내기
+    res.send(result)
+})
 
 
 
